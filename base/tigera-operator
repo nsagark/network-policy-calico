@@ -1,0 +1,367 @@
+---
+apiVersion: "rbac.authorization.k8s.io/v1"
+kind: "ClusterRole"
+rules:
+- apiGroups:
+  - ""
+  nonResourceURLs: []
+  resourceNames: []
+  resources:
+  - "namespaces"
+  - "pods"
+  - "podtemplates"
+  - "services"
+  - "endpoints"
+  - "events"
+  - "configmaps"
+  - "secrets"
+  - "serviceaccounts"
+  verbs:
+  - "create"
+  - "get"
+  - "list"
+  - "update"
+  - "delete"
+  - "watch"
+- apiGroups:
+  - ""
+  nonResourceURLs: []
+  resourceNames: []
+  resources:
+  - "nodes"
+  verbs:
+  - "get"
+  - "patch"
+  - "list"
+  - "watch"
+- apiGroups:
+  - "rbac.authorization.k8s.io"
+  nonResourceURLs: []
+  resourceNames: []
+  resources:
+  - "clusterroles"
+  - "clusterrolebindings"
+  - "rolebindings"
+  - "roles"
+  verbs:
+  - "create"
+  - "get"
+  - "list"
+  - "update"
+  - "delete"
+  - "watch"
+  - "bind"
+  - "escalate"
+- apiGroups:
+  - "apps"
+  nonResourceURLs: []
+  resourceNames: []
+  resources:
+  - "deployments"
+  - "daemonsets"
+  - "statefulsets"
+  verbs:
+  - "create"
+  - "get"
+  - "list"
+  - "patch"
+  - "update"
+  - "delete"
+  - "watch"
+- apiGroups:
+  - "apps"
+  nonResourceURLs: []
+  resourceNames:
+  - "tigera-operator"
+  resources:
+  - "deployments/finalizers"
+  verbs:
+  - "update"
+- apiGroups:
+  - "operator.tigera.io"
+  nonResourceURLs: []
+  resourceNames: []
+  resources:
+  - "*"
+  verbs:
+  - "create"
+  - "get"
+  - "list"
+  - "update"
+  - "patch"
+  - "delete"
+  - "watch"
+- apiGroups:
+  - "networking.k8s.io"
+  nonResourceURLs: []
+  resourceNames: []
+  resources:
+  - "networkpolicies"
+  verbs:
+  - "create"
+  - "update"
+  - "delete"
+  - "get"
+  - "list"
+  - "watch"
+- apiGroups:
+  - "crd.projectcalico.org"
+  nonResourceURLs: []
+  resourceNames: []
+  resources:
+  - "felixconfigurations"
+  verbs:
+  - "create"
+  - "patch"
+  - "list"
+  - "get"
+  - "watch"
+- apiGroups:
+  - "crd.projectcalico.org"
+  nonResourceURLs: []
+  resourceNames: []
+  resources:
+  - "ippools"
+  - "kubecontrollersconfigurations"
+  verbs:
+  - "get"
+  - "list"
+  - "watch"
+- apiGroups:
+  - "scheduling.k8s.io"
+  nonResourceURLs: []
+  resourceNames: []
+  resources:
+  - "priorityclasses"
+  verbs:
+  - "create"
+  - "get"
+  - "list"
+  - "update"
+  - "delete"
+  - "watch"
+- apiGroups:
+  - "policy"
+  nonResourceURLs: []
+  resourceNames: []
+  resources:
+  - "poddisruptionbudgets"
+  verbs:
+  - "create"
+  - "get"
+  - "list"
+  - "update"
+  - "delete"
+  - "watch"
+- apiGroups:
+  - "apiregistration.k8s.io"
+  nonResourceURLs: []
+  resourceNames: []
+  resources:
+  - "apiservices"
+  verbs:
+  - "list"
+  - "watch"
+  - "create"
+  - "update"
+- apiGroups:
+  - "coordination.k8s.io"
+  nonResourceURLs: []
+  resourceNames: []
+  resources:
+  - "leases"
+  verbs:
+  - "create"
+  - "get"
+  - "list"
+  - "update"
+  - "delete"
+  - "watch"
+- apiGroups:
+  - "policy"
+  nonResourceURLs: []
+  resourceNames:
+  - "tigera-operator"
+  resources:
+  - "podsecuritypolicies"
+  verbs:
+  - "use"
+- apiGroups:
+  - "policy"
+  nonResourceURLs: []
+  resourceNames: []
+  resources:
+  - "podsecuritypolicies"
+  verbs:
+  - "get"
+  - "list"
+  - "watch"
+  - "create"
+  - "update"
+  - "delete"
+- apiGroups:
+  - "certificates.k8s.io"
+  nonResourceURLs: []
+  resourceNames: []
+  resources:
+  - "certificatesigningrequests"
+  verbs:
+  - "list"
+metadata:
+  annotations: {}
+  name: "tigera-operator"
+  labels:
+    app.kubernetes.io/name: "tigera-operator"
+
+---
+metadata:
+  name: "default"
+apiVersion: "operator.tigera.io/v1"
+kind: "Installation"
+spec:
+  kubernetesProvider: ""
+  imagePullSecrets: []
+
+---
+apiVersion: "v1"
+kind: "ServiceAccount"
+metadata:
+  namespace: "tigera-operator"
+  annotations: {}
+  name: "tigera-operator"
+  labels:
+    app.kubernetes.io/name: "tigera-operator"
+
+---
+kind: "Deployment"
+apiVersion: "apps/v1"
+metadata:
+  namespace: "tigera-operator"
+  annotations: {}
+  name: "tigera-operator"
+  labels:
+    app.kubernetes.io/name: "tigera-operator"
+    k8s-app: "tigera-operator"
+    app.kubernetes.io/component: "deployment.tigera-operator"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      name: "tigera-operator"
+    matchExpressions: []
+  strategy:
+    type: "RollingUpdate"
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      annotations: {}
+      labels:
+        name: "tigera-operator"
+        app.kubernetes.io/name: "tigera-operator"
+        k8s-app: "tigera-operator"
+        app.kubernetes.io/component: "deployment.tigera-operator"
+    spec:
+      terminationGracePeriodSeconds: 30
+      nodeSelector:
+        kubernetes.io/os: "linux"
+      serviceAccountName: "tigera-operator"
+      hostNetwork: true
+      dnsPolicy: "ClusterFirstWithHostNet"
+      volumes:
+      - name: "var-lib-calico"
+        hostPath:
+          path: "/var/lib/calico"
+      containers:
+      - name: "tigera-operator"
+        image: "quay.io/tigera/operator:v1.23.5"
+        command:
+        - "operator"
+        args: []
+        imagePullPolicy: "IfNotPresent"
+        env:
+        - name: "WATCH_NAMESPACE"
+          value: ""
+        - name: "POD_NAME"
+          valueFrom:
+            fieldRef:
+              apiVersion: "v1"
+              fieldPath: "metadata.name"
+        - name: "OPERATOR_NAME"
+          value: "tigera-operator"
+        - name: "TIGERA_OPERATOR_INIT_IMAGE_VERSION"
+          value: "v1.23.5"
+        volumeMounts:
+        - name: "var-lib-calico"
+          readOnly: true
+          mountPath: "/var/lib/calico"
+        envFrom:
+        - configMapRef:
+            name: "kubernetes-services-endpoint"
+            optional: true
+      tolerations:
+      - operator: "Exists"
+        effect: "NoExecute"
+      - operator: "Exists"
+        effect: "NoSchedule"
+
+---
+apiVersion: "rbac.authorization.k8s.io/v1"
+kind: "ClusterRoleBinding"
+metadata:
+  annotations: {}
+  name: "tigera-operator"
+  labels:
+    app.kubernetes.io/name: "tigera-operator"
+subjects:
+- kind: "ServiceAccount"
+  name: "tigera-operator"
+  namespace: "tigera-operator"
+roleRef:
+  apiGroup: "rbac.authorization.k8s.io"
+  kind: "ClusterRole"
+  name: "tigera-operator"
+
+---
+metadata:
+  annotations:
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: "*"
+  name: "tigera-operator"
+apiVersion: "policy/v1beta1"
+kind: "PodSecurityPolicy"
+spec:
+  hostPorts:
+  - min: 0
+    max: 65535
+  seLinux:
+    rule: "RunAsAny"
+  fsGroup:
+    ranges:
+    - min: 1
+      max: 65535
+    rule: "MustRunAs"
+  hostNetwork: true
+  volumes:
+  - "hostPath"
+  - "configMap"
+  - "emptyDir"
+  - "projected"
+  - "secret"
+  - "downwardAPI"
+  - "persistentVolumeClaim"
+  hostIPC: false
+  requiredDropCapabilities:
+  - "ALL"
+  readOnlyRootFilesystem: false
+  privileged: false
+  runAsUser:
+    rule: "MustRunAsNonRoot"
+  supplementalGroups:
+    ranges:
+    - min: 1
+      max: 65535
+    rule: "MustRunAs"
+  allowPrivilegeEscalation: false
+  hostPID: false
