@@ -1,6 +1,6 @@
 apiVersion: "operator.tigera.io/v1"
 metadata:
-  name: "eks-install"
+  name: "default"
 kind: "Installation"
 spec:
   kubernetesProvider: "EKS"
