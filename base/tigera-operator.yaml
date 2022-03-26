@@ -365,3 +365,11 @@ spec:
     rule: "MustRunAs"
   allowPrivilegeEscalation: false
   hostPID: false
+  ---
+apiVersion: "operator.tigera.io/v1"
+metadata:
+  name: "default"
+kind: "Installation"
+spec:
+  kubernetesProvider: ""
+  imagePullSecrets: []
