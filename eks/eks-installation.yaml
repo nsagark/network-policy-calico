@@ -1,7 +1,7 @@
 apiVersion: "operator.tigera.io/v1"
 metadata:
-  name: "default"
+  name: "eks-install"
 kind: "Installation"
 spec:
   kubernetesProvider: "EKS"
-  imagePullSecrets: []
+
