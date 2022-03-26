@@ -365,6 +365,7 @@ spec:
     rule: "MustRunAs"
   allowPrivilegeEscalation: false
   hostPID: false
+
 ---
 apiVersion: "operator.tigera.io/v1"
 metadata:
