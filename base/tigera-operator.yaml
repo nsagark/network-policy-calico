@@ -5942,3 +5942,11 @@ spec:
                   \ be applied last.  Policies with identical order will be applied\
                   \ in alphanumerical order based on the Policy \"Name\"."
                 type: "number"
+---
+apiVersion: operator.tigera.io/v1
+kind: Installation
+metadata:
+  name: default
+  annotations:
+    "helm.sh/hook": post-install
+spec:
