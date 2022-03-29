@@ -12,5 +12,5 @@ patchesStrategicMerge:
       "helm.sh/hook": post-install
     spec:
     # Configures Calico policy configured to work with AmazonVPC CNI networking.
-    cni:
-      type: AmazonVPC
+      cni:
+        type: AmazonVPC
